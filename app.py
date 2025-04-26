@@ -64,7 +64,8 @@ if st.button("🔍 Predict"):
     else:
         st.warning("Please enter a message before predicting.")
 
-# Clear button placed below Predict
+# Clear button placed below Predict button
 if st.button("🧹 Clear"):
     st.session_state.input_sms = ""
-    st.experimental_rerun()  # <- This reloads the app
+    st.rerun()  
+
