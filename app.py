@@ -2,13 +2,15 @@ import pickle
 import streamlit as st
 import nltk
 from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords 
+from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
-
-# Download necessary NLTK resources
 import os
+
+# Ensure the necessary NLTK resources are available
 nltk_data_path = os.path.join(os.getcwd(), 'nltk_data')
 nltk.data.path.append(nltk_data_path)
+
+# Check and download necessary NLTK resources if they are not found
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
@@ -19,18 +21,17 @@ try:
 except LookupError:
     nltk.download('stopwords', download_dir=nltk_data_path)
 
-# Initialize stemmer
+# Initialize stemmer and stopwords
 ps = PorterStemmer()
+stop_words = set(stopwords.words('english'))
 
 # Text preprocessing function
 def transform_txt(text):
     text = text.lower()
     tokens = word_tokenize(text)
     
-    y = []
-    for word in tokens:
-        if word.isalnum() and word not in stopwords.words('english'):
-            y.append(ps.stem(word))
+    # Filter tokens: keep alphanumeric words that are not stopwords
+    y = [ps.stem(word) for word in tokens if word.isalnum() and word not in stop_words]
     
     return " ".join(y)
 
@@ -66,4 +67,4 @@ if st.button("🔍 Predict"):
 # Clear button placed below Predict
 if st.button("🧹 Clear"):
     st.session_state.input_sms = ""
-    st.rerun()  # <- This is the correct function now
+    st.experimental_rerun()  # <- This reloads the app
